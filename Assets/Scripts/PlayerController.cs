@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(movement * speed);
     }
 
+    // Referenced https://answers.unity.com/questions/1100879/push-object-in-opposite-direction-of-collision.html
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Pick Up"))
@@ -37,13 +38,17 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
+        } else if (other.CompareTag("Moving Pick Up")) {
+            Vector3 force = transform.position - other.transform.position;
+            force.Normalize();
+            gameObject.GetComponent<Rigidbody>().AddForce(force * 600);
         }
     }
 
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString();
-        if (count >= 12)
+        if (count >= 13)
         {
             winText.text = "You Win!";
         }
